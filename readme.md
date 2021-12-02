@@ -1,14 +1,15 @@
 # Instruction
-1. What is Django?
->>>
-Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.
->>>
-2. Django MTV pattern
+#### 1. What is Django?
+
+  <p> Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.</p>
+
+#### 2. Django MTV pattern
   - MTV: Model-Template-View
   - Model (M): Logical data structure
   - Template (T): Presentation layer
   - View (V): Data formatting
   - Working flow of Django framework: Template --> View --> Models --> View --> Template
+
 **Require**: Let user Python3
 ## Install django 
   ```shell script
@@ -22,8 +23,8 @@ Django is a high-level Python web framework that encourages rapid development an
   ```
 <p>This will create a NewProject directory in your current directory</p>
 
-> *Note: *Name_project avoid using name like "Django" or "Test"
-<p>Structure a project</p>
+> **Note** Name_project avoid using name like "Django" or "Test"
+<p>Structure a project:</p>
 
 ```shell script
 NewProject/
@@ -59,8 +60,9 @@ NewProject/
   - In SimpleApp, create a new URL pattern to link method home in views.py file
   - In NewProject, import include SimpleApp/urls.py on the sencond line of NewProject/urls.py
   - Working flow of url: access url: http://localhost:8000 --> NewProject/urls.py --> SimpleApp/urls --> home method
-<p> The structure a app </p>
-  ```
+<p> The structure a app: </p>
+
+  ```shell script
   SimpleApp/
       __init__.py
       admin.py
@@ -78,10 +80,11 @@ NewProject/
   - models.py: where we define our database models which Django automatically translates into database tables
   - tests.py: test the working of the app
   - views.py: where we handle the request/response logic for our web app
-<p> *Note: *__init__.py, urls.py  has the same function in NewProject but here it is in SimpleApp </p>
+
+**Note**: <p>__init__.py, urls.py  has the same function in NewProject but here it is in SimpleApp </p>
 
 >>>
-  *Project & apps*
+  **Project & apps**
   - A project represents the entire website whereas, an app is basically a submodule of the project.
   - A single project can contain multiple apps whereas, an app can also be used in different projects.
   - A project is like a blueprint of the entire web application whereas, apps are the building blocks of an web application.
@@ -90,7 +93,7 @@ NewProject/
 >>>
 
 >>>
-* About path and include function*
+  **About path and include function**
   - Path:  function is passed four arguments, two required: route and view, and two optional: kwargs, and name
   - Include: function allows referencing other URLconfs
 >>>
@@ -108,8 +111,8 @@ NewProject/
 - Create database with name "django_demo" (Here I use DBeaver tool to create database )
 
 ### Setting connection to database postgresql
-  1. In *NewProject/settings.py: *change default sqlite3 to postgresql of DATABASES section
-    ```py
+  1. In *NewProject/settings.py*: change default sqlite3 to postgresql of DATABASES section
+    ```shell script
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -121,7 +124,7 @@ NewProject/
         }
     }
     ```
-  
+### Create 
    
 
 
