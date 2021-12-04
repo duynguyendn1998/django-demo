@@ -111,7 +111,7 @@ NewProject/
 #### Field types:
 Each field in your model should be an instance of the appropriate Field class. Django uses the field class types to determine a few things:
 - The column type, which tells the database what kind of data to store (e.g. INTEGER, VARCHAR, TEXT).
-- The default HTML widget to use when rendering a form field (e.g. <input type="text">, <select>).
+- The default HTML widget to use when rendering a form field.
 - The minimal validation requirements, used in Django’s admin and in automatically-generated forms.
 
 **Field options**
