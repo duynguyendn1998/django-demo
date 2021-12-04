@@ -10,7 +10,7 @@
   - View (V): Data formatting
   - Working flow of Django framework: Template --> View --> Models --> View --> Template
 
-**Require**: Let user Python3
+**Require**: Let use Python3
 ## Install django 
   ```shell script
       pip install Django
@@ -58,7 +58,7 @@ NewProject/
   - Create simple views in SimpleApp: In SimpleApp open views.py file then define home method 
   - In SimpleApp, create new urls.py file to manage SimpleApp
   - In SimpleApp, create a new URL pattern to link method home in views.py file
-  - In NewProject, import include SimpleApp/urls.py on the sencond line of NewProject/urls.py
+  - In NewProject, import include SimpleApp/urls.py on the second line of NewProject/urls.py
   - Working flow of url: access url: http://localhost:8000 --> NewProject/urls.py --> SimpleApp/urls --> home method
 <p> The structure a app: </p>
 
@@ -81,7 +81,7 @@ NewProject/
   - tests.py: test the working of the app
   - views.py: where we handle the request/response logic for our web app
 
-**Note**: <p>__init__.py, urls.py  has the same function in NewProject but here it is in SimpleApp </p>
+**Note**:__init__.py, urls.py  has the same function in NewProject but here it is in SimpleApp
 
 >>>
   **Project & apps**
@@ -101,19 +101,76 @@ NewProject/
   - Type of request: HttpRequest attributes, HttpRequest method,  QueryDict
   - Type of response: HttpResponse attributes, HttpResponse method, HttpResponse subclasses, JsonResponse, StreamingHttpResponse, FileResponse  
 # 3. Models + Database
-###  List supported database engine:
-   - django.db.backends.sqlite3 (default)
-   - django.db.backends.postgresql
-   - django.db.backends.mysql
-   - django.db.backends.oracle
 #### Prepare:
 - Create a new blog app + config (follow 2. Create a new app + URLs Mapping + Simple View )
 - Create database with name "django_demo" (Here I use DBeaver tool to create database )
 - Install psycopg2 `$ pip install django psycopg2`
   > Once your virtual environment is active, you can install Django with pip. We will also install the psycopg2 package that will allow us to use the database we configured
+### Models Field Types/Relationships
+> **Models:** A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you’re storing. Generally, each model maps to a single database table.
+#### Field types:
+Each field in your model should be an instance of the appropriate Field class. Django uses the field class types to determine a few things:
+- The column type, which tells the database what kind of data to store (e.g. INTEGER, VARCHAR, TEXT).
+- The default HTML widget to use when rendering a form field (e.g. <input type="text">, <select>).
+- The minimal validation requirements, used in Django’s admin and in automatically-generated forms.
+**Field options**
+- null
+- blank
+- choices
+- default
+- help_text
+- primary_key
+- unique
+#### Create users model
+  1. In **blog/models.py**
+  ``` shell script
+  from django.db import models
+
+  # Create Users models.
+  class Users(models.Model):
+      user_name = models.CharField(max_length=50, unique = True) # data type varchar with max_length 50 and unique value 
+      email = models.CharField(max_length=100)
+      password = models.CharField(max_length=50)
+      created_dt = models.DateTimeField(auto_now_add=True) # data type timestamptz and auto add when insert row
+  ```
+#### Relationships
+Django offers ways to define the three most common types of database relationships: many-to-one, many-to-many and one-to-one.
+**Many-to-one relationships**
+To define a many-to-one relationship, use django.db.models.ForeignKey. 
+ForeignKey requires a positional argument: the class to which the model is related.
+  ``` shell script
+  from django.db import models
+
+  # Create Posts models.
+  class Posts(models.Model):
+      user = models.ForeignKey(Users,on_delete=models.CASCADE, default="") # update to foreign key --> it is user_id in Posts table of database
+      title = models.CharField(max_length=100)
+      content_post = models.TextField() # data type text
+      created_dt = models.DateTimeField(auto_now_add=True) 
+
+  # Create Comments models.
+  class Comments(models.Model):
+      user = models.ForeignKey(Users,on_delete=models.CASCADE, default="")  # update to foreign key --> it is user_id in Comments table of database
+      post = models.ForeignKey(Posts,on_delete=models.CASCADE, default="")  # update to foreign key --> it is post_id in Comments table of database
+      content_comment = models.TextField()
+      created_dt = models.DateTimeField(auto_now_add=True)
+  ```
+**Many-to-many relationships**
+To define a many-to-many relationship, use ManyToManyField
+ManyToManyField requires a positional argument: the class to which the model is related.
+
+**One-to-one relationships**
+To define a one-to-one relationship, use OneToOneField.
+OneToOneField requires a positional argument: the class to which the model is related.
+
+###  List supported database engine:
+   - django.db.backends.sqlite3 (default)
+   - django.db.backends.postgresql
+   - django.db.backends.mysql
+   - django.db.backends.oracle
 #### Setting connection to database postgresql
   1. In *NewProject/settings.py*: change default sqlite3 to postgresql of DATABASES section
-    ```shell script
+  >>>
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -124,33 +181,7 @@ NewProject/
             'PORT': '5432',
         }
     }
-    ```
-#### Create users, posts and comments models
-  1. In **blog/models.py**
-  ``` shell script
-  from django.db import models
-
-  # Create Users models.
-  class Users(models.Model):
-      user_name = models.CharField(max_length=100) # data type varchar with max_length 100
-      email = models.CharField(max_length=100)
-      password = models.CharField(max_length=100)
-      created_dt = models.DateTimeField(auto_now_add=True) # data type timestamptz and auto add when insert row
-
-  # Create Posts models.
-  class Posts(models.Model):
-      user_id: models.IntegerField() # data type integer
-      title = models.CharField(max_length=100)
-      content_post = models.TextField() # data type text
-      created_dt = models.DateTimeField(auto_now_add=True) 
-      
-  # Create Comments models.
-  class Comments(models.Model):
-      user_id: models.IntegerField() 
-      post_id: models.IntegerField()
-      content_comment = models.TextField()
-      created_dt = models.DateTimeField(auto_now_add=True)
-  ```
+  >>>
 ### What is the Migrations?
 > **Migrations** are Django's way of propagating changes you make to your models (adding a field, deleting a model, etc.) into your database schema. They're designed to be mostly automatic, but you'll need to know when to make migrations, when to run them, and the common problems you might run into.
 
@@ -159,7 +190,7 @@ In `..\NewProject>` run  `$ python manage.py makemigrations blog`
 The result: 
 
 ``` shell script
-  PS D:\study\django-demo\NewProject> python manage.py makemigrations blog
+  ...\NewProject> python manage.py makemigrations blog
   Migrations for 'blog':
     blog\migrations\0001_initial.py
       - Create model Comments
@@ -170,9 +201,7 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
 
 ``` shell script
   # Generated by Django 3.2.9 on 2021-12-02 12:10
-
   from django.db import migrations, models
-
 
   class Migration(migrations.Migration):
 
@@ -256,6 +285,7 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
     Rendering model states... DONE
     Unapplying blog.0003_alter_users_email... OK
 ```  
+> **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**
 
 
 
