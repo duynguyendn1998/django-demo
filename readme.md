@@ -135,34 +135,76 @@ Each field in your model should be an instance of the appropriate Field class. D
       created_dt = models.DateTimeField(auto_now_add=True) # data type timestamptz and auto add when insert row
   ```
 #### Relationships
-Django offers ways to define the three most common types of database relationships: many-to-one, many-to-many and one-to-one.
+Django offers ways to define the three most common types of database relationships: many-to-one, many-to-many and one-to-one.  
+
 **Many-to-one relationships**
+
 To define a many-to-one relationship, use django.db.models.ForeignKey. 
+
 ForeignKey requires a positional argument: the class to which the model is related.
+
   ``` shell script
   from django.db import models
 
   # Create Posts models.
   class Posts(models.Model):
-      user = models.ForeignKey(Users,on_delete=models.CASCADE, default="") # update to foreign key --> it is user_id in Posts table of database
-      title = models.CharField(max_length=100)
-      content_post = models.TextField() # data type text
-      created_dt = models.DateTimeField(auto_now_add=True) 
+    user = models.ForeignKey(Users,on_delete=models.CASCADE, default="") # update to foreign key --> it is user_id in Posts table of database
+    title = models.CharField(max_length=100)
+    content_post = models.TextField() # data type text
+    created_dt = models.DateTimeField(auto_now_add=True) 
 
   # Create Comments models.
   class Comments(models.Model):
-      user = models.ForeignKey(Users,on_delete=models.CASCADE, default="")  # update to foreign key --> it is user_id in Comments table of database
-      post = models.ForeignKey(Posts,on_delete=models.CASCADE, default="")  # update to foreign key --> it is post_id in Comments table of database
-      content_comment = models.TextField()
-      created_dt = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(Users,on_delete=models.CASCADE, default="")  # update to foreign key --> it is user_id in Comments table of database
+    post = models.ForeignKey(Posts,on_delete=models.CASCADE, default="")  # update to foreign key --> it is post_id in Comments table of database
+    content_comment = models.TextField()
+    created_dt = models.DateTimeField(auto_now_add=True)
   ```
 **Many-to-many relationships**
-To define a many-to-many relationship, use ManyToManyField
-ManyToManyField requires a positional argument: the class to which the model is related.
 
-**One-to-one relationships**
-To define a one-to-one relationship, use OneToOneField.
-OneToOneField requires a positional argument: the class to which the model is related.
+To define a many-to-many relationship, use ManyToManyField   
+ManyToManyField requires a positional argument: the class to which the model is related.   
+
+ Example:  
+  ``` shell script
+  from django.db import models
+
+  class Topping(models.Model):
+      # ...
+      pass
+
+  class Pizza(models.Model):
+      # ...
+      toppings = models.ManyToManyField(Topping)
+  ```  
+Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/many_to_many/)
+**One-to-one relationships**   
+To define a one-to-one relationship, use OneToOneField.   
+OneToOneField requires a positional argument: the class to which the model is related.   
+ Example:  
+  ``` shell script
+  from django.db import models
+
+  class Person(models.Model):
+      name = models.CharField(max_length=128)
+
+      def __str__(self):
+          return self.name
+
+  class Group(models.Model):
+      name = models.CharField(max_length=128)
+      members = models.ManyToManyField(Person, through='Membership')
+
+      def __str__(self):
+          return self.name
+
+  class Membership(models.Model):
+      person = models.ForeignKey(Person, on_delete=models.CASCADE)
+      group = models.ForeignKey(Group, on_delete=models.CASCADE)
+      date_joined = models.DateField()
+      invite_reason = models.CharField(max_length=64)
+  ```  
+Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/one_to_one/)
 
 ###  List supported database engine:
    - django.db.backends.sqlite3 (default)
@@ -286,7 +328,9 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
     Rendering model states... DONE
     Unapplying blog.0003_alter_users_email... OK
 ```  
-> **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**
+> **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**  
+
+# Admin interface
 
 
 
