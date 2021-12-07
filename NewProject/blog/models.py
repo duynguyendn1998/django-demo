@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields.reverse_related import ManyToOneRel
+from django.contrib import admin
 
 # Create Users models.
 class Users(models.Model):
@@ -21,3 +21,7 @@ class Comments(models.Model):
     post = models.ForeignKey(Posts,on_delete=models.CASCADE, default="")  # update to foreign key --> it is post_id in Comments table of database
     content_comment = models.TextField()
     created_dt = models.DateTimeField(auto_now_add=True)
+
+    @admin.display(ordering='user___user_name')
+    def user_name(self):
+        return self.user.user_name

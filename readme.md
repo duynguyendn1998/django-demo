@@ -177,7 +177,7 @@ ManyToManyField requires a positional argument: the class to which the model is 
       # ...
       toppings = models.ManyToManyField(Topping)
   ```  
-Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/many_to_many/)
+Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/many_to_many/)   
 **One-to-one relationships**   
 To define a one-to-one relationship, use OneToOneField.   
 OneToOneField requires a positional argument: the class to which the model is related.   
@@ -204,7 +204,7 @@ OneToOneField requires a positional argument: the class to which the model is re
       date_joined = models.DateField()
       invite_reason = models.CharField(max_length=64)
   ```  
-Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/one_to_one/)
+Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/one_to_one/)   
 
 ###  List supported database engine:
    - django.db.backends.sqlite3 (default)
@@ -328,9 +328,35 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
     Rendering model states... DONE
     Unapplying blog.0003_alter_users_email... OK
 ```  
-> **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**  
+> **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**   
 
-# Admin interface
+# 4.Admin interface
+It reads metadata from your models to provide a quick, model-centric interface where trusted users can manage content on your site.  
 
+#### Add Django Admin into the project
+The admin is enabled in the default project template used by startproject.  
+#### Create superuser
+`$ python manage.py createsuperuser`   
+After entering the command, the system asks for admin account information, you usually enter username, email and password to initialize:  
+#### Register your Models
+In setting.py of blog app,  register model for admin page  
+
+``` shell script
+  from django.contrib import admin
+  from .models import Posts, Comments
+
+  # Setting display for Posts
+  class PostAdmin(admin.ModelAdmin):
+      list_display = ['title', 'created_dt'] # display column title & created_dt
+      list_filter = ['created_dt'] # filter by created_dt column
+      search_fields = ['title'] #  search by titel column
+
+  admin.site.register(Posts, PostAdmin) # registion model with setting display PostAdmin
+```   
+
+#### Access to the Admin page
+Now, Turn on the server and go to `/admin` and use the account I just created to log in.   
+
+# 5. Django ORM And QuerySets
 
 
