@@ -330,8 +330,8 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
 ```  
 > **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**   
 
-# 4.Admin interface
-It reads metadata from your models to provide a quick, model-centric interface where trusted users can manage content on your site.  
+# 4. Admin interface
+> One of the most powerful parts of Django is the automatic admin interface. It reads metadata from your models to provide a quick, model-centric interface where trusted users can manage content on your site. The admin’s recommended use is limited to an organization’s internal management tool. It’s not intended for building your entire front end around.   
 
 #### Add Django Admin into the project
 The admin is enabled in the default project template used by startproject.  
@@ -358,5 +358,91 @@ In setting.py of blog app,  register model for admin page
 Now, Turn on the server and go to `/admin` and use the account I just created to log in.   
 
 # 5. Django ORM And QuerySets
+>>> 
+Once you’ve created your data models, Django automatically gives you a database-abstraction API that lets you create, retrieve, update and delete objects.  
+- Object-Relational Mapping (ORM)
+- A QuerySet represents a collection of objects from your database. It can have zero, one or many filters. Filters narrow down the query results based on the given parameters. In SQL terms, a QuerySet equates to a SELECT statement, and a filter is a limiting clause such as WHERE or LIMIT. 
+>>>   
+
+#### Insert data to database  
+`py .\manage.py shell` or write in `..\blog\models.py` (but run with way data insert each build again)
+```shell scipt
+  # Create data example for User
+  >>> from blog.models  import Users 
+  >>> u = Users(user_name= 'Tuong Duy', email='nptduy@tma.com.vn', password='12345678x@X')
+  >>> u.save()
+  # Create data example for post
+  >>> from blog.models import Posts
+  >>> p = Posts(user_id = 1, title = 'Making queries', content_post = 'Once you’ve created your data models, Django automatically gives you a database-abstraction API that lets you create, retrieve, update and delete objects. This document explains how to use this API. Refer to the data model reference for full details of all the various model lookup options.')
+  >>> p.save()
+  # Create data example for comment
+  >>> from blog.models import Comments
+  >>> c = Comments(user_id= 1, post_id = 3, content_comment = 'Hello') 
+  >>> c.save()
+```  
+#### Methods that return new QuerySets  
+**Get all object of Posts**   
+``` shell script
+  >>> from blog.models import Posts
+  >>> Posts.objects.all()
+```  
+**filter()**   
+Returns a new QuerySet containing objects that match the given lookup parameters.   
+``` shell script
+  # Get all post by user_id = 1
+  >>> from blog.models import Posts
+  >>> Posts.objects.filter(user_id=1)
+  # get by year and user_id
+  >>> Posts.objects.filter(user_id=1, created_dt__year = 2020)
+```   
+**exclude()**   
+Returns a new QuerySet containing objects that do not match the given lookup parameters.   
+
+``` shell script
+  >>> from blog.models import Posts
+  >>> Posts.objects.exclude(user_id=1)
+```   
+**order_by()**   
+``` shell script
+  >>> from blog.models import Posts
+  # sort asc by id
+  >>> Posts.objects.order_by('id')
+  # sort desc by id
+  >>> Posts.objects.order_by('-id')
+```   
+**Limiting QuerySets**   
+``` shell script
+  >>> from blog.models import Posts
+  # return the first 2 objects of the table
+  >>> Posts.objects.all()[:2]
+  # returns from 2nd to 5th object 
+  >>> Posts.objects.all()[2:5]
+  # returns from 2nd
+  >>> Posts.objects.all()[2]
+```   
+**Field lookups**    
+get() takes only one object   
+filter() takes multiple objects   
+
+``` shell script
+  >>> from blog.models import Posts
+  # where title = 'hello world'
+  >>> Posts.objects.get(title__exact='hello world')
+  # where title = 'hello world' the same exact but case-insensitive 
+  >>> Posts.objects.get(title__iexact='heLlo world')
+  # where title like '%hello%'
+  >>> Posts.objects.filter(title__contains='hello')
+  # where title like '%hello%' the same contains but case-insensitive
+  >>> Posts.objects.filter(title__icontains='heLlo')
+  # where title like 'hello%' (istartswith: case-insensitive)
+  >>> Posts.objects.filter(title__startswith='hello')
+  # where title like '%hello' (iendswith: case-insensitive)
+  >>> Posts.objects.filter(title__endswith='hello')
+```   
+
+
+
+
+
 
 
