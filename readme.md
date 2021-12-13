@@ -439,6 +439,39 @@ filter() takes multiple objects
   # where title like '%hello' (iendswith: case-insensitive)
   >>> Posts.objects.filter(title__endswith='hello')
 ```   
+**select_related**   
+Returns a QuerySet that will “follow” foreign-key relationships, selecting additional related-object data when it executes its query. This is a performance booster which results in a single more complex query but means later use of foreign-key relationships won’t require database queries.   
+
+`select_related(*fields)`  
+
+**prefetch_related**   
+Returns a QuerySet that will automatically retrieve, in a single batch, related objects for each of the specified lookups.  
+
+`prefetch_related(*lookups)`
+
+Reference select_related and prefetch_related in **[here](https://docs.djangoproject.com/en/3.2/ref/models/querysets/)**    
+
+#### Response query data as json   
+
+**serializers**   
+```shell script
+  from django.core import serializers
+
+  from blog.models import Posts
+
+  def parse_response_json(self):
+        qs = Posts.objects.all()
+        # get full queryset
+        qs_json = serializers.serialize('json', qs)
+        # only get field 'title','content_post' of fields
+        qs_json = serializers.serialize('json', qs, fields=('title','content_post'))
+        # only get fields
+        
+        print(qs_json)
+ 
+```   
+
+
 
 
 

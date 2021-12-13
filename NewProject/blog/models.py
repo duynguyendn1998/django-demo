@@ -23,6 +23,8 @@ class Posts(models.Model):
     title = models.CharField(max_length=100)
     content_post = models.TextField() # data type text
     created_dt = models.DateTimeField(auto_now_add=True)
+    categories = models.ManyToManyField('Category', related_name='posts')
+
 
     def __str__(self): # display title instead of object
         return self.title
@@ -38,3 +40,9 @@ class Comments(models.Model):
     def user_name(self):
         return self.user.user_name
 
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
