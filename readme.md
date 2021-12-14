@@ -456,7 +456,6 @@ Reference select_related and prefetch_related in **[here](https://docs.djangopro
 **serializers**   
 ```shell script
   from django.core import serializers
-
   from blog.models import Posts
 
   def parse_response_json(self):
@@ -465,14 +464,77 @@ Reference select_related and prefetch_related in **[here](https://docs.djangopro
         qs_json = serializers.serialize('json', qs)
         # only get field 'title','content_post' of fields
         qs_json = serializers.serialize('json', qs, fields=('title','content_post'))
-        # only get fields
-        
+
         print(qs_json)
  
-```   
+```
+# 6. Templates + Static Files   
+### The Django template language  
+In blog app create new folder **templates**   
+In template folder create new file **base.html** to define frame for page (ex: header, fooder,..)   
+##### Variables 
+A variable outputs a value from the context, which is a dict-like object mapping keys to values.   
+Variables are surrounded by {{ and }} like this:   
+In `.\blog\templates\display_variables.html`
+``` html
+  {% extends "base.html" %} <!-- extend layout of base.html -->
 
+  {% block title %}Display variables{% endblock %}
 
+  {% block content %}
+      <li>Title: {{title}}</li>
+      <li>Author: {{author}}</li>
+      <li>Content_post: {{content_post}}</li>
+  {% endblock %}
+```  
+In `.\blog\views.py`
+```shell script
+  def display_variables(request):
+    # define dict example to display variables
+    posts = {
+        "title": "This is post", 
+        "author": "Tuong Duy",
+        "content_post": "Have a nice day!"
+    }
+   
+    return render(request, "display_variables.html", posts)
+```
+In `.\blog\urls.py` add path:  `path('display_variables', views.display_variables)`   
 
+##### Filters
+Filters transform the values of variables and tag arguments.
+In `.\blog\templates\display_variables.html`
+```shell script
+  {% extends "base.html" %} <!-- extend layout of base.html -->
+
+  {% block title %}Display variables{% endblock %}
+
+  {% block content %}
+      <li>Title: {{title}}</li>
+      <li>Author: {{author}}</li>
+      <li>Content_post: {{content_post|lower|linebreaks }}</li> <!-- use filter break line -->
+  {% endblock %}
+```  
+
+##### Tag
+Tags provide arbitrary logic in the rendering process.  
+Tags are surrounded by {% and %} like this:
+In `.\blog\templates\display_variables.html`
+```shell script
+  {% extends "base.html" %} <!-- extend layout of base.html -->
+
+  {% block title %}Display variables{% endblock %}
+
+  {% block content %}
+      <li>Title: {{title}}</li>
+      <li>Author: {{author}}</li>
+      <li>Content_post: {{content_post|lower|linebreaks }}</li> <!-- use filter break line -->
+  {% endblock %}
+```    
+**Comment**   
+Comments look like this:   
+`{# this won't be rendered #}`  
+A {% comment %} tag provides multi-line comments.
 
 
 

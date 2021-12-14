@@ -1,0 +1,9 @@
+{% extends "base.html" %} <!-- extend layout of base.html -->
+
+{% block title %}Display variables{% endblock %}
+
+{% block content %}
+    <li>Title: {{title}}</li>
+    <li>Author: {{author}}</li>
+    <li>Content post: {{content_post|lower|linebreaks }}</li> <!-- use filter break line -->
+{% endblock %}
