@@ -536,6 +536,48 @@ Comments look like this:
 `{# this won't be rendered #}`  
 A {% comment %} tag provides multi-line comments.
 
+### Static file
+Websites generally need to serve additional files such as images, JavaScript, or CSS. In Django, we refer to these files as “static files”. Django provides django.contrib.staticfiles to help you manage them.   
+**Configuring static files**   
+In **./NewProject/settings.py**   
+**django.contrib.staticfiles** is included in your INSTALLED_APPS.   
+
+```shell script
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.2/howto/static-files/
+STATIC_URL = 'static/'
+```      
+STATICFILES_DIRS is a dict that stores folder paths containing static files.
+``` shell script
+  STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+  ]
+```   
+Create folder `./NewProject/static/images` to save image and saved a image   
+In `./blog/templates/` create file load_image.html to test load static file    
+``` shell script
+  {% load static %}
+
+  <img src="{% static 'images/tree.jfif' %}" alt="Tree"> 
+```   
+In `./blog/views.py` add method   
+``` shell script
+  def load_images(request):
+    return render(request, "load_image.html")
+```    
+In `./blog/urls.py` add path: `path('load_images',views.load_images)`    
+After run  `http://127.0.0.1:8000/blog/load_images` you see image saved   
+
+>>>**Note**  
+Django will use the first static file it finds whose name matches, and if you had a static file with the same name in a different application, Django would be unable to distinguish between them. We need to be able to point Django at the right one, and the best way to ensure this is by namespacing them. That is, by putting those static files inside another directory named for the application itself.
+>>>   
+#### Update template for posts list
+
+
+
+
+
+
 
 
 

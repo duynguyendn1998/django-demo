@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Blog{% endblock %}
+{% block content %}
+<div class="card-deck">
+    {% for post in Posts %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'images/tree.png' %}" alt="blog image">
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.created_dt|date:"d-m-Y"}}.</p>
+                <a href="#" class="btn btn-primary">View detail</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+

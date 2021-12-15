@@ -1,0 +1,10 @@
+body {
+  background-color: whitesmoke;
+}
+
+.card-deck{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 1.5em;
+  padding: 1.5em;
+}

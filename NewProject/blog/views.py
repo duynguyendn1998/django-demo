@@ -28,3 +28,10 @@ def display_variables(request):
     }
    
     return render(request, "display_variables.html", posts)
+
+def load_images(request):
+    return render(request, "load_image.html")
+
+def blogs_list(request):
+   Data = {'Posts': Posts.objects.all().order_by('-created_dt')}
+   return render(request, 'blog_list.html', Data)
