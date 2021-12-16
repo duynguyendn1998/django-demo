@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{post.title}}</h5>
                 <p class="card-text">{{post.created_dt|date:"d-m-Y"}}.</p>
-                <a href="#" class="btn btn-primary">View detail</a>
+                <a href="{{post.id}}" class="btn btn-primary" style="float: right;">View detail</a>
             </div>
         </div>
     {% endfor %}

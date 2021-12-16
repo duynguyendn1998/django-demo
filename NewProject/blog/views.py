@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView
 
-from blog.models import Posts
+from blog.models import Posts, Users
 from blog.serializers import PostSerializer
 
 def posts_json(request):
@@ -33,5 +33,12 @@ def load_images(request):
     return render(request, "load_image.html")
 
 def blogs_list(request):
-   Data = {'Posts': Posts.objects.all().order_by('-created_dt')}
-   return render(request, 'blog_list.html', Data)
+   data = {'Posts': Posts.objects.all().order_by('-created_dt')}
+   return render(request, 'blog_list.html', data)
+
+def blog_detail(request, id):
+   post =  Posts.objects.get(id = id)
+   data = {'post': post,
+            'user': Users.objects.get(id = post.user_id)
+   }
+   return render(request, 'blog_detail.html', data)

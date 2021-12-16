@@ -572,7 +572,36 @@ After run  `http://127.0.0.1:8000/blog/load_images` you see image saved
 Django will use the first static file it finds whose name matches, and if you had a static file with the same name in a different application, Django would be unable to distinguish between them. We need to be able to point Django at the right one, and the best way to ensure this is by namespacing them. That is, by putting those static files inside another directory named for the application itself.
 >>>   
 #### Update template for posts list
-
+Download boostrap **[here](https://getbootstrap.com/)** after unzip and put in the static folder.  
+In `./blog/templates/base.html` add link:
+`<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">` to all page extends base.html do not import again   
+In `./blog/views.py` add method   
+``` shell script
+  def blogs_list(request):
+    Data = {'Posts': Posts.objects.all().order_by('-created_dt')}
+    return render(request, 'blog_list.html', Data)
+```     
+In `./blog/urls.py` add path: `path('',views.blogs_list)`   
+In `./blog/templates/` create file blog_list.html 
+``` shell script
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Blog{% endblock %}
+{% block content %}
+<div class="card-deck">
+    {% for post in Posts %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'images/tree.png' %}" alt="blog image">
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.created_dt|date:"d-m-Y"}}.</p>
+                <a href="#" class="btn btn-primary">View detail</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+```    
 
 
 
