@@ -1,8 +1,9 @@
 
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView
+from blog.forms import RegistrationForm
 
 from blog.models import Posts, Users
 from blog.serializers import PostSerializer
@@ -42,3 +43,12 @@ def blog_detail(request, id):
             'user': Users.objects.get(id = post.user_id)
    }
    return render(request, 'blog_detail.html', data)
+
+# def register(request):
+#     form = RegistrationForm()
+#     if request.method == 'POST':
+#         form = RegistrationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect('/')
+#     return render(request, 'blog/register.html', {'form': form})

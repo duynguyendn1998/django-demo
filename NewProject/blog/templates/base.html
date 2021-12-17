@@ -11,9 +11,20 @@
    <title>{% block title %}{% endblock %}</title>
 </head>
    <body>
-      {% block content %}
+      <div class="row">
+         <div class="col-sm-1">
+                  {% if user.username %}
+                     <p>Xin chào {{user.username}}</p>
+                     <p><a href="/redirect?Id=bPkSKQqMZ9erlLi6p21Q4A%3d%3d" url 'logout' %}">Đăng xuất</a></p>
+                  {% else %}
+                     <p><a href="/redirect?Id=bPkSKQqMZ9erlLi6p21Q4A%3d%3d" url 'register' %}">Đăng ký</a>|<a href="/redirect?Id=bPkSKQqMZ9erlLi6p21Q4A%3d%3d" url 'login' %}">Đăng nhập</a></p>
+                  {% endif %}
+               </div>
+         </div>
+         {% block content %}
 
-      {% endblock content %}
+         {% endblock content %}
+      </div>
     </body>
 
  

@@ -568,9 +568,9 @@ In `./blog/views.py` add method
 In `./blog/urls.py` add path: `path('load_images',views.load_images)`    
 After run  `http://127.0.0.1:8000/blog/load_images` you see image saved   
 
->>>**Note**  
+>**Note**  
 Django will use the first static file it finds whose name matches, and if you had a static file with the same name in a different application, Django would be unable to distinguish between them. We need to be able to point Django at the right one, and the best way to ensure this is by namespacing them. That is, by putting those static files inside another directory named for the application itself.
->>>   
+>    
 #### Update template for posts list
 Download boostrap **[here](https://getbootstrap.com/)** after unzip and put in the static folder.  
 In `./blog/templates/base.html` add link:
@@ -602,6 +602,7 @@ In `./blog/templates/` create file blog_list.html
 </div>
 {% endblock %}
 ```    
+# 7. Use generic views + Forms
 
 
 
