@@ -9,7 +9,7 @@ urlpatterns = [
    path('load_images',views.load_images),
    path('',views.blogs_list),
    path('<int:id>', views.blog_detail),
-   # path('register/', views.register, name="register"),
-   # path('login/', auth_views.LoginView.as_view(template_name="blog/login.html"), name="login"),
-   # path('logout/', auth_views.LogoutView.as_view(next_page='/'),name='logout')
+   path('register/', views.register, name="register"),
+   path('login/', auth_views.LoginView.as_view(template_name="login.html"), name="login"),
+   path('logout/', auth_views.LogoutView.as_view(next_page='/blog/'),name='logout')
 ]

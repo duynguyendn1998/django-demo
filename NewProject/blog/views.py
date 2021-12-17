@@ -44,11 +44,11 @@ def blog_detail(request, id):
    }
    return render(request, 'blog_detail.html', data)
 
-# def register(request):
-#     form = RegistrationForm()
-#     if request.method == 'POST':
-#         form = RegistrationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect('/')
-#     return render(request, 'blog/register.html', {'form': form})
+def register(request):
+    form = RegistrationForm()
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('')
+    return render(request, 'register.html', {'form': form})
