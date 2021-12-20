@@ -11,20 +11,35 @@
    <title>{% block title %}{% endblock %}</title>
 </head>
    <body>
-      <div class="row">
-         <div class="col-sm-1">
-                  {% if user.username %}
-                     <p><a href="logout">Logout</a></p>
-                  {% else %}
-                     <p><a href="register">Regrister</a>|<a href="login">Login</a></p>
-                  {% endif %}
-               </div>
+      <div class="container">
+          <div class="d-flex bd-highlight mb-3 bg-white border-bottom shadow-sm">
+            <div class=" me-auto p-2 bd-highlight" >
+               <a class="btn btn-secondary btn-sm" href="/blog" role="button">Home</a>
+            </div>
+               {% if user.username %}
+               <div class=" p-2 bd-highlight">
+                  <p>{{user.username}}</p>
+                  </div>
+                  <div class=" p-2 bd-highlight">
+                  <a class="btn btn-primary btn-sm" href="/blog/logout" role="button">Log out</a>
+                  </div>
+               {% else %}
+               <div class=" p-2 bd-highlight">
+                  <a class="btn btn-primary btn-sm" href="/blog/login" role="button">Log in</a>
+                  </div>
+                  <div class=" p-2 bd-highlight">
+                  <a class="btn btn-secondary btn-sm" href="/blog/register" role="button">Sign up</a>
+                              </div>
+               {% endif %}
+
          </div>
          {% block content %}
 
          {% endblock content %}
       </div>
     </body>
-
- 
 </html>
+
+
+
+

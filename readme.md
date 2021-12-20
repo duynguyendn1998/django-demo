@@ -7,15 +7,14 @@
  The MVT (Model View Template) is a software design pattern. It is a collection of three important components Model View and Template.  
   - Model (M) helps to handle database. It is a data access layer which handles the data. 
   - Template (T) is a presentation layer which handles User Interface part completely.    
-  - View (V) is used to execute the business logic and interact with a model to carry data and renders a template.  
-
+  - View (V) is used to execute the business logic and interact with a model to carry data and renders a template.   
 
 ## Install 
 **Require**: Let use Python3  
 **Setting up a virtual environment**    
-`...\> py -m venv django-demo`
+`...\> py -m venv django-demo`   
 **To activate the environment, run:**    
-`...\> django-demo\Scripts\activate.bat`  
+`...\> django-demo\Scripts\activate.bat`   
 **Install django**  
 Django can be installed easily using pip within your virtual environment.   
 `...\> py -m pip install Django`   
@@ -48,7 +47,7 @@ The outer helloworld/ root directory is a container for your project. Its name d
 
   - helloworld: directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it
   - manage.py: used as a command-line utility for our projects (use for debugging, deploying and runing our  web applications)  
-  - __init__.py: An empty file that tells Python that this directory should be considered a Python package.   
+  - <p>__init__.py</p>: An empty file that tells Python that this directory should be considered a Python package.   
   - wsgi.py: (web server gateway interface) deploy project to server    
   - asgi.py: (Asynchronours server gateway interface) the same wsgi  
   - setting.py: project configuration  
@@ -90,7 +89,7 @@ The outer helloworld/ root directory is a container for your project. Its name d
   - tests.py: test the working of the app
   - views.py: where we handle the request/response logic for our web app
 
-**Note**:__init__.py, urls.py  has the same function in helloworld but here it is in simple_app
+**Note**:<p>__init__.py</p>, urls.py  has the same function in helloworld but here it is in simple_app
 
 >>>
   **Project & apps**
@@ -106,9 +105,20 @@ The outer helloworld/ root directory is a container for your project. Its name d
   - Path:  function is passed four arguments, two required: route and view, and two optional: kwargs, and name
   - Include: function allows referencing other URLconfs
 >>>
-### Types of request and response
-  - Type of request: HttpRequest attributes, HttpRequest method,  QueryDict
-  - Type of response: HttpResponse attributes, HttpResponse method, HttpResponse subclasses, JsonResponse, StreamingHttpResponse, FileResponse  
+### Types of request and response  
+> When a page is requested, Django creates an HttpRequest object that contains metadata about the request. Then Django loads the appropriate view, passing the HttpRequest as the first argument to the view function. Each view is responsible for returning an HttpResponse object.  
+#### Type of request   
+  - HttpRequest attributes
+  - HttpRequest method 
+  - QueryDict
+#### Type of response     
+  - HttpResponse attributes:
+  - HttpResponse method: 
+  - HttpResponse subclasses:
+  - JsonResponse: 
+  - StreamingHttpResponse:
+  - FileResponse:  
+Reference: **https://docs.djangoproject.com/en/4.0/ref/request-response/**
 # 3. Models + Database
 #### Prepare:
 - Create a new blog app + config (follow 2. Create a new app + URLs Mapping + Simple View )
@@ -588,10 +598,10 @@ In `./blog/views.py` add method
 ``` shell script
   def blogs_list(request):
     Data = {'Posts': Posts.objects.all().order_by('-created_dt')}
-    return render(request, 'blog_list.html', Data)
+    return render(request, 'post_list.html', Data)
 ```     
 In `./blog/urls.py` add path: `path('',views.blogs_list)`   
-In `./blog/templates/` create file blog_list.html 
+In `./blog/templates/post/` create file post_list.html 
 ``` shell script
 {% extends "base.html" %}
 {% load static %}
@@ -611,7 +621,19 @@ In `./blog/templates/` create file blog_list.html
 </div>
 {% endblock %}
 ```    
+Similar design for post detail page
 # 7. Use generic views + Forms
+## Forms
+### Register account
+### Login
+### Logout
+## Generic views 
+### Create View
+### List View
+### Detail View
+### Updated View 
+### Delete View
+
 
 
 

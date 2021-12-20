@@ -14,5 +14,9 @@
         </div>
     {% endfor %}
 </div>
+<br/>
+{% if page_obj.has_next %}
+    <a href="#"> Next page</a>
+{% endif %}
 {% endblock %}
 

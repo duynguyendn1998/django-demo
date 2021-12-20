@@ -1,56 +1,23 @@
-<!DOCTYPE html>
-<html>
-<title>Blog detail</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
-{% load static %}
-<style>
-body, html {
-  height: 100%;
-  font-family: "Inconsolata", sans-serif;
-}
+{% extends 'base.html'%}
 
-.bgimg {
-  background-position: center;
-  background-size: cover;
-  background-image: url("{% static 'images/tree.png' %}");
-  min-height: 70%;
-}
+{% block title %}Blog{% endblock %}
+{% block content %}
+<div class="row g-5">
+    <div class="col-md-8">
+      {% comment %} <h3 class="pb-4 mb-4 fst-italic border-bottom">
+        From {{post.title}}
+      </h3> {% endcomment %}
+      <article class="blog-post">
+        <h2 class="blog-post-title">{{post.title}}</h2>
+        <p class="blog-post-meta">{{post.created_dt|date:"M d, Y"}} by <a href="#">Mark</a></p>
 
-.menu {
-  display: none;
-}
-</style>
-<body>
-    <!-- Header with image -->
-    <header class="bgimg w3-display-container w3-grayscale-min" id="home">
-    <div class="w3-display-bottomleft w3-center w3-padding-large w3-hide-small">
-        <span class="w3-tag">Thank you for visited my blog</span>
-    </div>
-    <div class="w3-display-middle w3-center">
-        <span class="w3-text-white" style="font-size:50px">{{post.title}}</span>
-    </div>
-    <div class="w3-display-bottomright w3-center w3-padding-large">
-        <span class="w3-text-black">{{post.created_dt|date:"M d, Y"}}</span>
-    </div>
-    </header>
-
-    <!-- Add a background color and large text to the whole page -->
-    <div class="w3-sand w3-grayscale w3-large">
-
-    <!-- About Container -->
-    <div class="w3-container" id="about">
-    <div class="w3-content" style="max-width:700px">
-        <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">{{post.title}}</span></h5>
         <p>{{post.content_post}}</p>
-    </div>
-    </div>
+      </article>
+      <nav class="blog-pagination" aria-label="Pagination">
+        <a class="btn btn-outline-primary" href="#">Older</a>
+        <a class="btn btn-outline-secondary disabled">Newer</a>
+      </nav>
 
-    <!-- Footer -->
-    <footer class="w3-center w3-light-grey w3-padding-48 w3-large">
-    <p>Powered by {{user.user_name}}</p>
-    </footer>
-</body>
-</html>
+    </div>
+  </div>
+{% endblock %}

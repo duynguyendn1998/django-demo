@@ -2,7 +2,7 @@
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from blog.user.forms import RegistrationForm
+from blog.service.user.forms import RegistrationForm
 from blog.models import Posts, Users
 
 def posts_json(request):
