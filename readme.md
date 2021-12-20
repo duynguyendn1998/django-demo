@@ -4,32 +4,38 @@
   <p> Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.</p>
 
 #### 2. Django MTV pattern
-  - MTV: Model-Template-View
-  - Model (M): Logical data structure
-  - Template (T): Presentation layer
-  - View (V): Data formatting
-  - Working flow of Django framework: Template --> View --> Models --> View --> Template
+ The MVT (Model View Template) is a software design pattern. It is a collection of three important components Model View and Template.  
+  - Model (M) helps to handle database. It is a data access layer which handles the data. 
+  - Template (T) is a presentation layer which handles User Interface part completely.    
+  - View (V) is used to execute the business logic and interact with a model to carry data and renders a template.  
 
-**Require**: Let use Python3
-## Install django 
-  ```shell script
-      pip install Django
-  ```
+
+## Install 
+**Require**: Let use Python3  
+**Setting up a virtual environment**    
+`...\> py -m venv django-demo`
+**To activate the environment, run:**    
+`...\> django-demo\Scripts\activate.bat`  
+**Install django**  
+Django can be installed easily using pip within your virtual environment.   
+`...\> py -m pip install Django`   
+**Check version django** (new in Django 3.2)     
+`$ python -m django --version`    
 
 # 1. Start new project
 ### Create a project
   ```shell script
-      django-admin startproject NewProject
+      django-admin startproject helloworld
   ```
-<p>This will create a NewProject directory in your current directory</p>
+<p>This will create a helloworld directory in your current directory</p>
 
 > **Note** Name_project avoid using name like "Django" or "Test"
 <p>Structure a project:</p>
 
 ```shell script
-NewProject/
+helloworld/
     manage.py
-    NewProject/
+    helloworld/
         __init__.py
         settings.py
         urls.py
@@ -38,32 +44,35 @@ NewProject/
 ```
 
 <p>These files are:</p>
-  - manage.py: used as a command-line utility for our projects (use for debugging, deploying and runing our web applications)
-  - __init__.py: the Python interpreter
-  - asgi.py: (Asynchronours server gateway interface) the same wsgi
-  - setting.py: project configuration
-  - urls.py: URLs of web pages to link web pages together
-  - wsgi.py: (web server gateway interface)deploy project to server
-  
+The outer helloworld/ root directory is a container for your project. Its name doesn’t matter to Django; can rename it to anything.   
+
+  - helloworld: directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it
+  - manage.py: used as a command-line utility for our projects (use for debugging, deploying and runing our  web applications)  
+  - __init__.py: An empty file that tells Python that this directory should be considered a Python package.   
+  - wsgi.py: (web server gateway interface) deploy project to server    
+  - asgi.py: (Asynchronours server gateway interface) the same wsgi  
+  - setting.py: project configuration  
+  - urls.py: URLs of web pages to link web pages together   
+
 #### Run server:
  - Run with port default: `python manage.py runserver`
  - Run with port 8080: `python manage.py runserver 8080`
 
 # 2. Create a new app + URLs Mapping + Simple View
 ### Create a new app
-  - In `...\NewProject>`,  `python manage.py startapp SimpleApps`
-  - In the NewProject project, open setting.py file add name_app (SimpleApp) to INSTALLED_APPS
-  - Update setting for NewProject: In `...\NewProject>`: `python manage.py migrate`
+  - In `...\helloworld>`,  `python manage.py startapp simple_apps`
+  - In the helloworld project, open setting.py file add name_app (simple_app) to INSTALLED_APPS
+  - Update setting for helloworld: In `...\helloworld>`: `python manage.py migrate`
 ### Define URL + simple views
-  - Create simple views in SimpleApp: In SimpleApp open views.py file then define home method 
-  - In SimpleApp, create new urls.py file to manage SimpleApp
-  - In SimpleApp, create a new URL pattern to link method home in views.py file
-  - In NewProject, import include SimpleApp/urls.py on the second line of NewProject/urls.py
-  - Working flow of url: access url: http://localhost:8000 --> NewProject/urls.py --> SimpleApp/urls --> home method
+  - Create simple views in simple_app: In simple_app open views.py file then define home method 
+  - In simple_app, create new urls.py file to manage simple_app
+  - In simple_app, create a new URL pattern to link method home in views.py file
+  - In helloworld, import include simple_app/urls.py on the second line of helloworld/urls.py
+  - Working flow of url: access url: http://localhost:8000 --> helloworld/urls.py --> simple_app/urls --> home method
 <p> The structure a app: </p>
 
   ```shell script
-  SimpleApp/
+  simple_app/
       __init__.py
       admin.py
       apps.py
@@ -81,7 +90,7 @@ NewProject/
   - tests.py: test the working of the app
   - views.py: where we handle the request/response logic for our web app
 
-**Note**:__init__.py, urls.py  has the same function in NewProject but here it is in SimpleApp
+**Note**:__init__.py, urls.py  has the same function in helloworld but here it is in simple_app
 
 >>>
   **Project & apps**
@@ -212,7 +221,7 @@ Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/one_to
    - django.db.backends.mysql
    - django.db.backends.oracle
 #### Setting connection to database postgresql
-  1. In *NewProject/settings.py*: change default sqlite3 to postgresql of DATABASES section
+  1. In *helloworld/settings.py*: change default sqlite3 to postgresql of DATABASES section
   >>>
     DATABASES = {
         'default': {
@@ -229,18 +238,18 @@ Reference [here](https://docs.djangoproject.com/en/3.2/topics/db/examples/one_to
 > **Migrations** are Django's way of propagating changes you make to your models (adding a field, deleting a model, etc.) into your database schema. They're designed to be mostly automatic, but you'll need to know when to make migrations, when to run them, and the common problems you might run into.
 
 **Create file migrations**
-In `..\NewProject>` run  `$ python manage.py makemigrations blog`
+In `..\helloworld>` run  `$ python manage.py makemigrations blog`
 The result: 
 
 ``` shell script
-  ...\NewProject> python manage.py makemigrations blog
+  ...\helloworld> python manage.py makemigrations blog
   Migrations for 'blog':
     blog\migrations\0001_initial.py
       - Create model Comments
       - Create model Posts
       - Create model Users
 ```
-I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with content
+I see a file to create in ...\helloworld\blog\migrations\0001_initial.py with content
 
 ``` shell script
   # Generated by Django 3.2.9 on 2021-12-02 12:10
@@ -315,13 +324,13 @@ I see a file to create in ...\NewProject\blog\migrations\0001_initial.py with co
 **Reversing migrate**
 ```shell script
   # migrate version 3
-  ...\NewProject> python manage.py migrate blog
+  ...\helloworld> python manage.py migrate blog
   Operations to perform:
     Apply all migrations: blog
   Running migrations:
     Applying blog.0003_alter_users_email... OK
   # reversing version 2
-  ...\NewProject> python manage.py migrate blog 0002
+  ...\helloworld> python manage.py migrate blog 0002
   Operations to perform:
     Target specific migration: 0002_auto_20211203_0933, from blog
   Running migrations:
@@ -539,7 +548,7 @@ A {% comment %} tag provides multi-line comments.
 ### Static file
 Websites generally need to serve additional files such as images, JavaScript, or CSS. In Django, we refer to these files as “static files”. Django provides django.contrib.staticfiles to help you manage them.   
 **Configuring static files**   
-In **./NewProject/settings.py**   
+In **./helloworld/settings.py**   
 **django.contrib.staticfiles** is included in your INSTALLED_APPS.   
 
 ```shell script
@@ -553,7 +562,7 @@ STATICFILES_DIRS is a dict that stores folder paths containing static files.
     os.path.join(BASE_DIR, "static"),
   ]
 ```   
-Create folder `./NewProject/static/images` to save image and saved a image   
+Create folder `./helloworld/static/images` to save image and saved a image   
 In `./blog/templates/` create file load_image.html to test load static file    
 ``` shell script
   {% load static %}
