@@ -5,7 +5,7 @@
     <form method="POST">
         {% csrf_token %}
         {% for key, value in form.errors.items %}
-            {{value}}
+           <p style="color: red;"> {{value}} </p>
         {% endfor %}
         <p><label>User name:</label>{{form.username}}</p>
         <p><label>Password:</label>{{form.password}}</p>

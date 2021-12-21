@@ -3,7 +3,8 @@ from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from blog.service.user.forms import RegistrationForm
-from blog.models import Posts, Users
+from blog.models import Posts
+from django.contrib.auth.models import User
 
 def posts_json(request):
     qs = Posts.objects.all()
@@ -30,7 +31,7 @@ def blogs_list(request):
 def blog_detail(request, id):
    post =  Posts.objects.get(id = id)
    data = {'post': post,
-            'user': Users.objects.get(id = post.user_id)
+            'user': User.objects.get(id = post.user_id)
    }
    return render(request, 'post/post_detail.html', data)
 
@@ -45,10 +46,10 @@ def register(request):
 
 def dummy_data(request):
     try:
-        user = Users.objects.get(user_name= 'abc')
-    except Users.DoesNotExist:
-        user = Users(user_name= 'abc', email='abc@tma.com.vn', password='12345678x@X')
+        user = User.objects.get(user_name= 'abc')
+    except User.DoesNotExist:
+        user = User(user_name= 'abc', email='abc@tma.com.vn', password='12345678x@X')
         user.save()
 
-    user = Users.objects.get(user_name= 'abc')
+    user = User.objects.get(user_name= 'abc')
     return HttpResponse(user)

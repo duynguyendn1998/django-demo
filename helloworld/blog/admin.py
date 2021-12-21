@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Posts, Comments
+from .models import Category, Posts, Comments
 
 # Setting display for Posts
 class PostAdmin(admin.ModelAdmin):
@@ -12,4 +12,11 @@ admin.site.register(Posts, PostAdmin) # registion model with setting display Pos
 #setting display for comments
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['content_comment','user_name','created_dt']
+
 admin.site.register(Comments, CommentAdmin)
+
+# Setting display for Category
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+
+admin.site.register(Category, CategoryAdmin) 
