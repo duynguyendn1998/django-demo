@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from rest_framework import fields
 from blog.models import Posts
 from blog.service.post.post_form import PostCreateForm
@@ -44,7 +44,9 @@ class PostUpdateView(UpdateView):
     model = Posts
     fields = ['title', 'content_post']
     template_name = 'post/post_form.html'
+    success_url ="/blog/"
 
-    def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect('/blog/')
+class PostDeleteView(DeleteView):
+    model = Posts
+    template_name = 'post/posts_confirm_delete.html'
+    success_url ="/blog/"

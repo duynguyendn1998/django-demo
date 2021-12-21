@@ -2,7 +2,7 @@ from django.urls import path
 from django.urls.base import reverse
 from blog import views
 from django.contrib.auth import views as auth_views
-from blog.service.post.post_service import PostListViewJson, PostListView, PostDetailView, PostCreateView, PostUpdateView
+from blog.service.post.post_service import PostDeleteView, PostListViewJson, PostListView, PostDetailView, PostCreateView, PostUpdateView
 
 urlpatterns = [
    path('post_serializers', views.posts_json),
@@ -19,4 +19,5 @@ urlpatterns = [
    path('<int:pk>', PostDetailView.as_view(), name='detail_post'),
    path('new_post/', PostCreateView.as_view(), name='create_post'),
    path('<int:pk>/update', PostUpdateView.as_view()),
+   path('<int:pk>/delete', PostDeleteView.as_view()),
 ]
