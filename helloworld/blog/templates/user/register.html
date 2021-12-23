@@ -1,10 +1,10 @@
-{% extends 'base.html'%}
+{% extends 'base.html'%} <!--extend base.html page-->
 
-{% block title %}Sign up{% endblock %}
-{% block content %}
+{% block title %}Sign up{% endblock %} <!-- define title of template display in UI-->
+{% block content %} 
     <form action="." method="POST" class="form-group">
         {% csrf_token %}
-        {{form.as_p}}
+        {{form.as_p}} <!-- will render them wrapped in <p> tags -->
         <input type="submit" value="Register"/>
     </form>
 {% endblock %}

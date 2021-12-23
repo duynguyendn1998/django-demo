@@ -43,13 +43,3 @@ def register(request):
             form.save()
             return HttpResponseRedirect('/blog/')
     return render(request, 'user/register.html', {'form': form})
-
-def dummy_data(request):
-    try:
-        user = User.objects.get(user_name= 'abc')
-    except User.DoesNotExist:
-        user = User(user_name= 'abc', email='abc@tma.com.vn', password='12345678x@X')
-        user.save()
-
-    user = User.objects.get(user_name= 'abc')
-    return HttpResponse(user)

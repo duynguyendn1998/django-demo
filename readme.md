@@ -141,18 +141,7 @@ Each field in your model should be an instance of the appropriate Field class. D
 - help_text
 - primary_key
 - unique
-#### Create users model
-  1. In **blog/models.py**
-  ``` shell script
-  from django.db import models
 
-  # Create Users models.
-  class Users(models.Model):
-      user_name = models.CharField(max_length=50, unique = True) # data type varchar with max_length 50 and unique value 
-      email = models.CharField(max_length=100)
-      password = models.CharField(max_length=50)
-      created_dt = models.DateTimeField(auto_now_add=True) # data type timestamptz and auto add when insert row
-  ```
 #### Relationships
 Django offers ways to define the three most common types of database relationships: many-to-one, many-to-many and one-to-one.  
 
@@ -164,17 +153,18 @@ ForeignKey requires a positional argument: the class to which the model is relat
 
   ``` shell script
   from django.db import models
+  from django.contrib.auth.models import User
 
   # Create Posts models.
   class Posts(models.Model):
-    user = models.ForeignKey(Users,on_delete=models.CASCADE, default="") # update to foreign key --> it is user_id in Posts table of database
+    user = models.ForeignKey(User,on_delete=models.CASCADE, default="") # update to foreign key --> it is user_id in Posts table of database
     title = models.CharField(max_length=100)
     content_post = models.TextField() # data type text
     created_dt = models.DateTimeField(auto_now_add=True) 
 
   # Create Comments models.
   class Comments(models.Model):
-    user = models.ForeignKey(Users,on_delete=models.CASCADE, default="")  # update to foreign key --> it is user_id in Comments table of database
+    user = models.ForeignKey(User,on_delete=models.CASCADE, default="")  # update to foreign key --> it is user_id in Comments table of database
     post = models.ForeignKey(Posts,on_delete=models.CASCADE, default="")  # update to foreign key --> it is post_id in Comments table of database
     content_comment = models.TextField()
     created_dt = models.DateTimeField(auto_now_add=True)
@@ -257,7 +247,6 @@ The result:
     blog\migrations\0001_initial.py
       - Create model Comments
       - Create model Posts
-      - Create model Users
 ```
 I see a file to create in ...\helloworld\blog\migrations\0001_initial.py with content
 
@@ -287,16 +276,6 @@ I see a file to create in ...\helloworld\blog\migrations\0001_initial.py with co
                   ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                   ('title', models.CharField(max_length=100)),
                   ('content_post', models.TextField()),
-                  ('created_dt', models.DateTimeField(auto_now_add=True)),
-              ],
-          ),
-          migrations.CreateModel(
-              name='Users',
-              fields=[
-                  ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                  ('user_name', models.CharField(max_length=100)),
-                  ('email', models.CharField(max_length=100)),
-                  ('password', models.CharField(max_length=100)),
                   ('created_dt', models.DateTimeField(auto_now_add=True)),
               ],
           ),
@@ -335,17 +314,8 @@ I see a file to create in ...\helloworld\blog\migrations\0001_initial.py with co
 ```shell script
   # migrate version 3
   ...\helloworld> python manage.py migrate blog
-  Operations to perform:
-    Apply all migrations: blog
-  Running migrations:
-    Applying blog.0003_alter_users_email... OK
   # reversing version 2
   ...\helloworld> python manage.py migrate blog 0002
-  Operations to perform:
-    Target specific migration: 0002_auto_20211203_0933, from blog
-  Running migrations:
-    Rendering model states... DONE
-    Unapplying blog.0003_alter_users_email... OK
 ```  
 > **Note**: It is possible to use multiple databases for a project, which can be found **[here](https://docs.djangoproject.com/en/3.2/topics/db/multi-db/).**   
 
@@ -386,10 +356,6 @@ Once you’ve created your data models, Django automatically gives you a databas
 #### Insert data to database  
 `py .\manage.py shell` or write in `..\blog\models.py` (but run with way data insert each build again)
 ```shell scipt
-  # Create data example for User
-  >>> from blog.models  import Users 
-  >>> u = Users(user_name= 'Tuong Duy', email='nptduy@tma.com.vn', password='12345678x@X')
-  >>> u.save()
   # Create data example for post
   >>> from blog.models import Posts
   >>> p = Posts(user_id = 1, title = 'Making queries', content_post = 'Once you’ve created your data models, Django automatically gives you a database-abstraction API that lets you create, retrieve, update and delete objects. This document explains how to use this API. Refer to the data model reference for full details of all the various model lookup options.')
@@ -624,17 +590,391 @@ In `./blog/templates/post/` create file post_list.html
 Similar design for post detail page
 # 7. Use generic views + Forms
 ## Forms
-### Register account
-### Login
-### Logout
+Django’s form functionality can simplify and automate vast portions of this work, and can also do it more securely than most programmers would be able to do in code they wrote themselves.   
+Django handles three distinct parts of the work involved in forms:   
+- Preparing and restructuring data to make it ready for rendering
+- Creating HTML forms for the data
+- Receiving and processing submitted forms and data from the client  
+
+Please read the reference document for better understanding, below is a demo using form   
+Reference: https://docs.djangoproject.com/en/4.0/topics/forms/
+### Register account  
+In UI display 3 button in `base.html`:  
+```shell script
+...
+{% if user.username %}
+  <div class=" p-2 ">
+      <p class="fw-bolder">{{user.username}}</p>
+  </div>
+  <div class=" p-2 bd-highlight">
+      <a class="btn btn-primary btn-sm" href="/blog/logout" role="button">Log out</a>
+  </div>
+{% else %}
+  <div class=" p-2 bd-highlight">
+      <a class="btn btn-primary btn-sm" href="/blog/login" role="button">Log in</a>
+      </div>
+      <div class=" p-2 bd-highlight">
+      <a class="btn btn-secondary btn-sm" href="/blog/register" role="button">Sign up</a>
+  </div>
+{% endif %}
+....
+```
+
+**The view**  
+In `/blog/service/user/` create `forms.py` contains the content below:
+```shell script 
+from django import forms
+import re
+from django.contrib.auth.models import User
+
+class RegistrationForm(forms.Form):
+    #Create form input user infor
+    username = forms.CharField(label='User name', max_length=30) # max_length=30: Cannot enter to than 30 character, label='User name': this field display label 'User name' in UI
+    email = forms.EmailField(label='Email')
+    first_name = forms.CharField(label='First name', max_length=100)
+    last_name = forms.CharField(label='Last name', max_length=100)
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput())# widget=forms.PasswordInput(): The field is password, hidden input value
+    password2 = forms.CharField(label='Password confirm', widget=forms.PasswordInput()) 
+
+    def clean_password2(self): # method check password and password confirm, 
+        if 'password1' in self.cleaned_data:
+            password1 = self.cleaned_data['password1']
+            password2 = self.cleaned_data['password2']
+            if password1 == password2 and password1:
+                return password2
+        raise forms.ValidationError("Password is incorrect")
+
+    def clean_username(self): 
+        username = self.cleaned_data['username']
+        if not re.search(r'^\w+$', username): # Do the username check contains special characters?
+            raise forms.ValidationError("User name with special characters")
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist: # Check user has been exist?
+            return username
+        raise forms.ValidationError("User name already exists")
+
+    def save(self): #Save user info to auth_user table of django
+        User.objects.create_user(username=self.cleaned_data['username'], 
+        email=self.cleaned_data['email'], 
+        password=self.cleaned_data['password1'],
+        first_name = self.cleaned_data['first_name'],
+        last_name = self.cleaned_data['last_name'],)
+```  
+**The template**  
+In `/blog/templates/user/` create `register.html` contains the content below: 
+```shell script
+{% extends 'base.html'%} <!--extend base.html page-->
+
+{% block title %}Sign up{% endblock %} <!-- define title of template display in UI-->
+{% block content %} 
+    <form action="." method="POST" class="form-group">
+        {% csrf_token %}
+        {{form.as_p}} <!-- will render them wrapped in <p> tags -->
+        <input type="submit" value="Register"/>
+    </form>
+{% endblock %}
+
+```  
+In `\blog\urls.py` add line:
+``` shell scipt
+....
+from django.contrib.auth import views as auth_views #Because use User default of django --> rename views to auth_view avoid confusion 
+
+urlpatterns = [
+  path('register/', views.register, name="register"),
+  ...
+]
+```
+### Login  
+**The template**  
+In `/blog/templates/user/` create `login.html` contains the content below: 
+```shell script
+{% extends 'base.html'%}
+
+{% block title %}Log in{% endblock %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {% for key, value in form.errors.items %}
+           <p style="color: red;"> {{value}} </p>
+        {% endfor %}
+        <p><label>User name:</label>{{form.username}}</p>
+        <p><label>Password:</label>{{form.password}}</p>
+        <input type="hidden" name="next" value="/blog/"/> <!--after login redirect to /blog/ page-->
+        <input type="submit" value="Login"/>
+    </form>
+{%endblock%}
+
+```  
+In `\blog\urls.py` add line:
+``` shell scipt
+....
+from django.contrib.auth import views as auth_views 
+
+urlpatterns = [
+  path('login/', auth_views.LoginView.as_view(template_name="user/login.html"), name="login"),
+  ...
+]
+```
+### Logout   
+In `\blog\urls.py` add line:
+``` shell scipt
+....
+from django.contrib.auth import views as auth_views 
+
+urlpatterns = [
+  path('logout/', auth_views.LogoutView.as_view(next_page='/blog/'),name='logout'),
+  ...
+]
+```
+
+Reference: [Using the Django authentication system](https://docs.djangoproject.com/en/4.0/topics/auth/default/)
 ## Generic views 
+Django ships with generic views to do the following:  
+- Display list and detail pages for a single object. If we were creating an application to manage conferences then a TalkListView and a RegisteredUserListView would be examples of list views. A single talk page is an example of what we call a “detail” view.
+- Present date-based objects in year/month/day archive pages, associated detail, and “latest” pages.
+- Allow users to create, update, and delete objects – with or without authorization.
 ### Create View
-### List View
-### Detail View
-### Updated View 
-### Delete View
+**The form**  
+Create class form `\blog\service\post\post_form.py`
+```shell script
+from django import forms
+from blog.models import Category, Posts
+
+# Post create form 
+class PostCreateForm(forms.ModelForm):
+    categories  = forms.ModelMultipleChoiceField(queryset=None,
+                    widget=forms.CheckboxSelectMultiple,
+                    required=True,) #show list category is check box 
+    content_post = forms.CharField(widget = forms.Textarea(attrs={'placeholder': 'Please enter content post',
+                                                            'class': 'form-control'})) # Create field content of post redesign to text area 
+
+    class Meta:
+        model = Posts #Model use
+        fields = ['title', 'content_post','categories',] # Define fields in form
+
+    def __init__(self, *args, **kwargs): # Init data for form
+        self.user = kwargs.pop('request') # get current user
+        super(PostCreateForm, self).__init__(*args, **kwargs) 
+        self.fields['categories'].queryset = Category.objects.order_by("name") # load category list for field categories
 
 
+    # The title should be unique per user.
+    def clean_title(self):
+        title = self.cleaned_data['title'] #get title from form
+        if Posts.objects.filter(user=self.user, title=title).exists(): #If title is exists in db to show error
+            raise forms.ValidationError("You have already written a Post with same title.")
+        return title
+```  
+**The view**  
+In`\blog\service\post\` create post_service.py contains the function of post  
+``` shell script
+from django.views.generic.edit import CreateView
+from blog.models import Posts
+from blog.service.post.post_form import PostCreateForm
+
+class PostCreateView(CreateView): # class create class
+    form_class = PostCreateForm # class form of post from PostCreateForm
+    template_name = 'post/post_form.html' # template display in UI
+
+    def form_valid(self, form): # implementation for form_valid() simply redirects to the success_url.
+        post = form.save(commit=False)  # create a model instance return an object that hasn't yet been saved to the database.
+        post.user = self.request.user # get user from request to save in db with many to one relationship with model
+        post.save() # save model to database
+        form.save_m2m() # save checkbox in form to table have many to many relationship
+        return HttpResponseRedirect('/blog/') # if success redirect to list blog
+
+    def get_form_kwargs(self, *args, **kwargs): #Build the keyword arguments required to instantiate the form.
+        kwargs = super(PostCreateView, self).get_form_kwargs(*args, **kwargs)
+        kwargs['request'] = self.request.user # add current user to 
+        return kwargs
+```  
+**The template**  
+Create temmplate for post `/blog/templates/post/post_form.html`
+```shell script
+{% extends 'base.html'%}
+
+{% block title %}Post{% endblock %}
+{% block content %}
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Save" >
+</form>
+{% endblock %}
+```  
+In `blog\urls.py`
+``` shell script
+  urlpatterns = [
+    path('new_post/', PostCreateView.as_view(), name='create_post'),
+  ...
+]
+```  
+### List View 
+**The view**  
+In In`\blog\service\post\post_service.py `
+```shell script
+class PostListView(ListView):
+    queryset = Posts.objects.all().order_by('-created_dt') # get all posts and sorted by date 
+    template_name = 'post/post_list.html' # define template display
+    context_object_name = 'Posts' # name of variable to access from templates (default: object)
+    paginate_by = 12 #the number of items (post) displayed on UI
+```  
+In `blog\urls.py`
+``` shell script
+  urlpatterns = [
+    path('', PostListView.as_view(), name='blog'),
+  ...
+]
+```  
+**The template**  
+Re-using `blog\template\post\post_list.html` and add page for page 
+```shell script
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Blog{% endblock %}
+{% block content %}
+<div class="card-deck">
+    {% for post in Posts %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'images/tree.png' %}" alt="blog image">
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.created_dt|date:"d-m-Y"}}.</p>
+                <a href="{{post.id}}" class="btn btn-primary" style="float: right;">View detail</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<nav aria-label="Page navigation example"> <!-- handle page-->
+  <ul class="pagination justify-content-end">
+   {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a  class="btn btn-outline-secondary disabled" >Previous</a>
+    </li>
+    {% endif %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li> <!-- get current page-->
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a  class="btn btn-outline-secondary disabled" >Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
+```  
+### Detail View 
+**The view**  
+In In`\blog\service\post\post_service.py `
+```shell script
+class PostDetailView(DetailView):
+    model = Posts
+    context_object_name = 'post'
+    template_name = 'post/post_detail.html'
+```  
+In `blog\urls.py`
+``` shell script
+  urlpatterns = [
+       path('<int:pk>', PostDetailView.as_view(), name='detail_post'),
+  ...
+]
+```  
+**The template**  
+Re-using `blog\template\post\post_detail.html` and add page for page 
+```shell script
+{% extends 'base.html'%}
+
+{% block title %}Blog{% endblock %}
+{% block content %}
+<div class="row g-5">
+    <div class="col-md-8">
+      <article class="blog-post">
+        <h2 class="blog-post-title">{{post.title}}</h2>
+        <p class="blog-post-meta">{{post.created_dt|date:"M d, Y"}} by <a href="#">{{post.user.username}}</a></p>
+
+        <p>{{post.content_post}}</p>
+      </article>
+
+      {% if post.user.username == user.username %}
+        <a class="btn btn-outline-primary" href="{{post.id}}/update">Edit</a>
+        <a class="btn btn-outline-danger" href="{{post.id}}/delete">Delete</a>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}
+```  
+### Updated View   
+**The form**   
+In `blog\service\post\post_form.py`  
+```shell script
+  class PostUpdateForm(forms.ModelForm):
+    categories  = forms.ModelMultipleChoiceField(queryset=Category.objects.prefetch_related(),
+                    widget=forms.CheckboxSelectMultiple,
+                    required=True,)
+    content_post = forms.CharField(widget = forms.Textarea(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = Posts
+        fields = ['title', 'content_post','categories',]
+```  
+**The view**  
+In In`\blog\service\post\post_service.py `
+```shell script
+  class PostUpdateView(UpdateView):
+    model = Posts
+    form_class = PostUpdateForm
+    template_name = 'post/post_form.html'
+    success_url ="/blog/" # redirect to blog_list when action success 
+```  
+In `blog\urls.py`
+``` shell script
+  urlpatterns = [
+      path('<int:pk>/update', PostUpdateView.as_view()),
+  ...
+]
+```  
+**The template**  
+Re-using `blog\template\post\post_form.html`
+
+### Delete View  
+**The view**  
+In In`\blog\service\post\post_service.py `
+```shell script
+  class PostDeleteView(DeleteView):
+    model = Posts
+    template_name = 'post/posts_confirm_delete.html'
+    success_url ="/blog/"
+```  
+In `blog\urls.py`
+``` shell script
+  urlpatterns = [
+      path('<int:pk>/delete', PostDeleteView.as_view()),
+  ...
+]
+```  
+**The template**  
+In `blog\template\post\posts_confirm_delete.html`  
+``` shell script
+  {% extends 'base.html' %}
+  {% block title %}Delete a post{% endblock %}
+
+  {% block content %}
+
+  <form method="post">{% csrf_token %}
+  <p>Are you sure you want to delete "{{ object }}"?</p>
+      <input type="submit" value="Confirm">
+  </form>
+  {% endblock %}
+```   
 
 
 

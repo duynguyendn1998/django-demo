@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls.base import reverse
 from blog import views
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views #Because use User default of django --> rename views to auth_view avoid confusion 
 from blog.service.post.post_service import PostDeleteView, PostListViewJson, PostListView, PostDetailView, PostCreateView, PostUpdateView
 
 urlpatterns = [
@@ -11,7 +11,6 @@ urlpatterns = [
    path('load_images',views.load_images),
    # path('',views.blogs_list),
    # path('<int:id>', views.blog_detail, name='post detail'),
-   path('dummy_data', views.dummy_data),
    path('register/', views.register, name="register"),
    path('login/', auth_views.LoginView.as_view(template_name="user/login.html"), name="login"),
    path('logout/', auth_views.LogoutView.as_view(next_page='/blog/'),name='logout'),
